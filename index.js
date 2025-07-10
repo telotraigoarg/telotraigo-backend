@@ -16,8 +16,9 @@ const https = require("https");
 
 const agent = new https.Agent({ rejectUnauthorized: false });
 const response = await axios.get("https://www.dolarsi.com/api/api.php?type=valoresprincipales", { httpsAgent: agent });
-    const data = response.data;
-    const dolarOficial = data.find((d) => d.casa.nombre === "Dolar Oficial");
+const data = Array.isArray(response.data) ? response.data : [];
+const dolarOficial = data.find((d) => d.casa?.nombre === "Dolar Oficial");
+
     const venta = parseFloat(dolarOficial.casa.venta.replace(",", "."));
     res.json({ venta });
   } catch (error) {
