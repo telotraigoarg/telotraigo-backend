@@ -12,7 +12,10 @@ app.use(cors());
 
 app.get("/api/dolar-oficial", async (req, res) => {
   try {
-    const response = await axios.get("https://www.dolarsi.com/api/api.php?type=valoresprincipales");
+const https = require("https");
+
+const agent = new https.Agent({ rejectUnauthorized: false });
+const response = await axios.get("https://www.dolarsi.com/api/api.php?type=valoresprincipales", { httpsAgent: agent });
     const data = response.data;
     const dolarOficial = data.find((d) => d.casa.nombre === "Dolar Oficial");
     const venta = parseFloat(dolarOficial.casa.venta.replace(",", "."));
