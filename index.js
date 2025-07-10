@@ -1,5 +1,4 @@
-
-// Backend Express para Te Lo Traigo Autos - Dolarsi con Axios
+// Backend Express para Te Lo Traigo Autos - Cotización con DolarAPI
 
 const express = require("express");
 const axios = require("axios");
@@ -10,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 
-app.get(app.get("/api/dolar-oficial", async (req, res) => {
+app.get("/api/dolar-oficial", async (req, res) => {
   try {
     const response = await axios.get("https://dolarapi.com/v1/dolares/oficial");
     const data = response.data;
@@ -24,28 +23,6 @@ app.get(app.get("/api/dolar-oficial", async (req, res) => {
   } catch (error) {
     console.error("Error al obtener la cotización:", error.message);
     res.status(500).json({ error: "No se pudo obtener la cotización oficial" });
-  }
-});
-, async (req, res) => {
-  try {
-const https = require("https");
-
-const agent = new https.Agent({ rejectUnauthorized: false });
-const response = await axios.get("https://www.dolarsi.com/api/api.php?type=valoresprincipales", { httpsAgent: agent });
-const data = Array.isArray(response.data) ? response.data : [];
-const dolarOficial = data.find((d) => d?.casa?.nombre === "Dolar Oficial");
-
-if (!dolarOficial || !dolarOficial.casa?.venta) {
-  return res.status(500).json({ error: "No se encontró la cotización del dólar oficial" });
-}
-
-const venta = parseFloat(dolarOficial.casa.venta.replace(",", "."));
-res.json({ venta });
-
-    res.json({ venta });
-  } catch (error) {
-    console.error("Error al obtener la cotización:", error);
-    res.status(500).json({ error: "No se pudo obtener la cotización" });
   }
 });
 
