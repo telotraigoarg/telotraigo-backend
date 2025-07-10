@@ -17,9 +17,15 @@ const https = require("https");
 const agent = new https.Agent({ rejectUnauthorized: false });
 const response = await axios.get("https://www.dolarsi.com/api/api.php?type=valoresprincipales", { httpsAgent: agent });
 const data = Array.isArray(response.data) ? response.data : [];
-const dolarOficial = data.find((d) => d.casa?.nombre === "Dolar Oficial");
+const dolarOficial = data.find((d) => d?.casa?.nombre === "Dolar Oficial");
 
-    const venta = parseFloat(dolarOficial.casa.venta.replace(",", "."));
+if (!dolarOficial || !dolarOficial.casa?.venta) {
+  return res.status(500).json({ error: "No se encontró la cotización del dólar oficial" });
+}
+
+const venta = parseFloat(dolarOficial.casa.venta.replace(",", "."));
+res.json({ venta });
+
     res.json({ venta });
   } catch (error) {
     console.error("Error al obtener la cotización:", error);
