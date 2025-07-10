@@ -1,8 +1,8 @@
 
-// Backend Express para Te Lo Traigo Autos - Cotización dólar oficial desde Dolarsi
+// Backend Express para Te Lo Traigo Autos - Dolarsi con Axios
 
 const express = require("express");
-const fetch = require("node-fetch");
+const axios = require("axios");
 const cors = require("cors");
 
 const app = express();
@@ -12,8 +12,8 @@ app.use(cors());
 
 app.get("/api/dolar-oficial", async (req, res) => {
   try {
-    const response = await fetch("https://www.dolarsi.com/api/api.php?type=valoresprincipales");
-    const data = await response.json();
+    const response = await axios.get("https://www.dolarsi.com/api/api.php?type=valoresprincipales");
+    const data = response.data;
     const dolarOficial = data.find((d) => d.casa.nombre === "Dolar Oficial");
     const venta = parseFloat(dolarOficial.casa.venta.replace(",", "."));
     res.json({ venta });
